@@ -131,8 +131,10 @@ public:
 
 	Node* remove_min(Node* root)
 	{
-		if(root->left == 0)
+		if (root->left == nullptr)
+		{
 			return root->right;
+		}
 		root->left = remove_min(root->left);
 		return balance(root);
 	}
