@@ -2,10 +2,18 @@
 #include <functional>
 #include <algorithm>
 
+#define DEBUG
+
+
 template<typename val_type, typename comp_type=std::less<val_type>>
 class Tree
 {
+#ifndef DEBUG
 private:
+#else
+public:
+#endif
+
 	struct Node
 	{
 		val_type key;
@@ -17,11 +25,21 @@ private:
 	};
 
 public:
+	Tree() = default;
 
+	Tree& push(const val_type& val)
+	{
+		root = insert(root, val);
+		return *this;
+	}
 
+#ifndef DEBUG
 private:
+#else
+public:
+#endif
 	comp_type pred;
-	Node* root;
+	Node* root = nullptr;
 
 	size_t height(Node* p)const
 	{
@@ -74,5 +92,21 @@ private:
 			return rotate_right(root);
 		}
 		return root;
+	}
+	Node* insert(Node* root, const val_type& key)
+	{
+		if(root==nullptr)
+		{
+			return new Node(key);
+		}
+		if (pred(root->key,key))
+		{
+			root->right = insert(root->right, key);
+		}
+		else
+		{
+			root->left = insert(root->left, key);
+		}
+		return balance(root);
 	}
 };
