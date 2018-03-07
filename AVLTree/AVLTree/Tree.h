@@ -3,11 +3,7 @@
 #include <functional>
 #include <algorithm>
 #include <vector>
-<<<<<<< HEAD
 
-=======
-using std::cout;
->>>>>>> master
 
 
 template <typename val_type, typename comp_type=std::less<val_type>>
