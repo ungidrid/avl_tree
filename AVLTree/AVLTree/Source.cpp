@@ -21,13 +21,12 @@ void Print(Tree<int>::Node *Ptr, int totalSpace)
 int main()
 {
 	Tree<int> tr;
-	for(size_t i=0; i<20; ++i)
+	for(size_t i=1; i<=10; ++i)
 	{
 		tr.push(i);
 	}
-	Print(tr.root, 0);
+	tr.push(4);
 
-	tr.erase(2);
-
+	tr.erase(8);
 	Print(tr.root, 0);
 }
