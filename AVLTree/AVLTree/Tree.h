@@ -3,6 +3,7 @@
 #include <functional>
 #include <algorithm>
 #include <vector>
+#include <stack>
 
 using std::cout;
 
@@ -32,7 +33,7 @@ public:
 	Tree& insert(const val_type&);//Insert new node into tree
 	Tree& remove(const val_type&);//Remove node from tree
 	Node* find(const val_type& val) const;//find node in tree
-
+	
 	template <typename con = std::vector<val_type>>
 	con inorder_print() const;
 

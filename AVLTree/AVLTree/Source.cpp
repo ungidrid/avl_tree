@@ -1,28 +1,29 @@
 #include <iostream>
 #include "Tree.h"
 #include <string>
+#include <map>
 using namespace std;
 
 
 
 int main()
 {
-	Tree<string> tr;
-	tr.insert("a");
-	tr.insert("b");
-	tr.insert("c");
-	tr.insert("d");
-	tr.insert("e");
-	tr.insert("f");
-	tr.insert("m");
-	tr.insert("h");
-	tr.insert("o");
-	tr.insert("p");
-	tr.insert("q");
-	cout << tr << endl;
-
-	auto con = tr.postorder_print();
-	for (const auto& it : con)
-		cout << it << endl;
+	map<string, string> tr;
+	tr["a"]="a";
+	tr["b"] = "b";
+	tr["c"] = "c";
+	tr["d"] = "d";
+	tr["f"] = "f";
+	tr["m"] = "m";
+	tr["h"] = "h";
+	tr["o"] = "o";
+	tr["p"] = "p";
+	tr["q"] = "q";
+	tr["e"] = "e";
+	
+	for(auto it=tr.begin(); it!=tr.end(); ++it)
+	{
+		cout << it->first << endl;
+	}
 
 }
