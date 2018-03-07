@@ -1,6 +1,4 @@
-#include <iostream>
 #include "Tree.h"
-#include <string>
 #include "gtest/gtest.h"
 
 using namespace std;
