@@ -1,3 +1,5 @@
+#define _SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING
+
 #include "Tree.h"
 #include "gtest/gtest.h"
 #include <string>
@@ -12,10 +14,7 @@ struct Tree_test: testing::Test
 	Tree<int> tr;
 };
 
-TEST_P(Tree_test, insert_test)
-{
-	EXPECT_EQ(0, 0);
-}
+
 	
 
 int main(int argc, char* argv[])
