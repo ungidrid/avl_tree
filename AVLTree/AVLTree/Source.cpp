@@ -3,7 +3,15 @@
 
 using namespace std;
 
+struct Tree_test: testing::Test
+{
+	Tree<int> tr;
+};
 
+TEST_P(Tree_test, insert_test)
+{
+	EXPECT_EQ(0, 0);
+}
 
 int main(int argc, char* argv[])
 {
