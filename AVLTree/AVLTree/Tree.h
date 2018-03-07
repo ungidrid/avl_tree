@@ -4,7 +4,6 @@
 #include <algorithm>
 #include <vector>
 
-using std::cout;
 
 
 template <typename val_type, typename comp_type=std::less<val_type>>

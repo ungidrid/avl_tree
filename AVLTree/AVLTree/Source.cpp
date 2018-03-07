@@ -1,28 +1,14 @@
 #include <iostream>
 #include "Tree.h"
 #include <string>
+#include "gtest/gtest.h"
+
 using namespace std;
 
 
 
-int main()
+int main(int argc, char* argv[])
 {
-	Tree<string> tr;
-	tr.insert("a");
-	tr.insert("b");
-	tr.insert("c");
-	tr.insert("d");
-	tr.insert("e");
-	tr.insert("f");
-	tr.insert("m");
-	tr.insert("h");
-	tr.insert("o");
-	tr.insert("p");
-	tr.insert("q");
-	cout << tr << endl;
-
-	auto con = tr.postorder_print();
-	for (const auto& it : con)
-		cout << it << endl;
-
+	::testing::InitGoogleTest(&argc, argv);
+	return RUN_ALL_TESTS();
 }
