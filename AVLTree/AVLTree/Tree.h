@@ -35,25 +35,13 @@ public:
 	Node* find(const val_type& val) const;
 
 	template<typename con = std::vector<val_type>>
-	con inorder_print()const {
-		con result;
-		inorder_print<con>(result, root);
-		return std::move(result);
-	}
-	
-	template<typename con = std::vector<val_type>>
-	con preorder_print()const {
-		con result;
-		preorder_print<con>(result, root);
-		return std::move(result);
-	}
+	con inorder_print() const;
 
 	template<typename con = std::vector<val_type>>
-	con postorder_print()const {
-		con result;
-		postorder_print<con>(result, root);
-		return std::move(result);
-	}
+	con preorder_print() const;
+
+	template<typename con = std::vector<val_type>>
+	con postorder_print() const;
 
 	template <typename val_type, typename comp_type = std::less<val_type>>
 	friend std::ostream& operator<<(std::ostream&, const Tree<val_type, comp_type>&);
@@ -75,32 +63,13 @@ private:
 	Node* find(Node*, const val_type&) const;
 
 	template<typename con>
-	void inorder_print(con& arr, Node* rt)const {
-		
-		if (rt != nullptr) {
-			inorder_print(arr, rt->left);
-			arr.push_back(rt->key);
-			inorder_print(arr, rt->right);
-		}
-	}
+	void inorder_print(con& arr, Node* rt) const;
 
 	template<typename con>
-	void postorder_print(con& arr, Node* rt)const {
-		if (rt != nullptr) {
-			postorder_print(arr, rt->left);
-			postorder_print(arr, rt->right);
-			arr.push_back(rt->key);
-		}
-	}
+	void postorder_print(con& arr, Node* rt) const;
 
 	template<typename con>
-	void preorder_print(con& arr, Node* rt)const {
-		if (rt != nullptr) {
-			arr.push_back(rt->key);
-			preorder_print(arr, rt->left);
-			preorder_print(arr, rt->right);
-		}
-	}
+	void preorder_print(con& arr, Node* rt) const;
 
 	void print(std::ostream&, const Node*, int = 0) const;
 };
@@ -109,6 +78,33 @@ template <typename val_type, typename comp_type>
 typename Tree<val_type, comp_type>::Node* Tree<val_type, comp_type>::find(const val_type& val) const
 {
 	return find(root, val);
+}
+
+template <typename val_type, typename comp_type>
+template <typename con>
+con Tree<val_type, comp_type>::inorder_print() const
+{
+	con result;
+	inorder_print<con>(result, root);
+	return std::move(result);
+}
+
+template <typename val_type, typename comp_type>
+template <typename con>
+con Tree<val_type, comp_type>::preorder_print() const
+{
+	con result;
+	preorder_print<con>(result, root);
+	return std::move(result);
+}
+
+template <typename val_type, typename comp_type>
+template <typename con>
+con Tree<val_type, comp_type>::postorder_print() const
+{
+	con result;
+	postorder_print<con>(result, root);
+	return std::move(result);
 }
 
 template <typename val_type, typename comp_type>
@@ -282,6 +278,42 @@ typename Tree<val_type, comp_type>::Node* Tree<val_type, comp_type>::find(Node* 
 		return rt;
 	}
 	return nullptr;
+}
+
+template <typename val_type, typename comp_type>
+template <typename con>
+void Tree<val_type, comp_type>::inorder_print(con& arr, Node* rt) const
+{
+	if(rt != nullptr)
+	{
+		inorder_print(arr, rt->left);
+		arr.push_back(rt->key);
+		inorder_print(arr, rt->right);
+	}
+}
+
+template <typename val_type, typename comp_type>
+template <typename con>
+void Tree<val_type, comp_type>::postorder_print(con& arr, Node* rt) const
+{
+	if(rt != nullptr)
+	{
+		postorder_print(arr, rt->left);
+		postorder_print(arr, rt->right);
+		arr.push_back(rt->key);
+	}
+}
+
+template <typename val_type, typename comp_type>
+template <typename con>
+void Tree<val_type, comp_type>::preorder_print(con& arr, Node* rt) const
+{
+	if(rt != nullptr)
+	{
+		arr.push_back(rt->key);
+		preorder_print(arr, rt->left);
+		preorder_print(arr, rt->right);
+	}
 }
 
 template <typename val_type, typename comp_type>
