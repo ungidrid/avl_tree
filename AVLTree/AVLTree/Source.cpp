@@ -2,21 +2,7 @@
 #include "Tree.h"
 using namespace std;
 
-void Print(Tree<int>::Node *Ptr, int totalSpace)
-{
-	while (Ptr != nullptr)
-	{
-		Print(Ptr->right, totalSpace + 5);
 
-		for (int i = 1; i <= totalSpace; i++)
-			cout << " ";
-
-		cout << Ptr->key << "\n";
-
-		Ptr = Ptr->left;
-		totalSpace += 5;
-	}
-}
 
 int main()
 {
@@ -26,8 +12,13 @@ int main()
 		tr.push(i);
 	}
 	tr.push(4);
+	tr.push(2);
+	
+	cout << tr << endl;
 
-	tr.erase(1);
+	cout << endl;
+	cout << endl;
 
-	Print(tr.root, 0);
+	tr.erase(4);
+	cout << tr << endl;
 }
