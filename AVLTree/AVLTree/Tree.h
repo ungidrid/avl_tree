@@ -46,6 +46,11 @@ public:
 	template <typename val_type, typename comp_type = std::less<val_type>>
 	friend std::ostream& operator<<(std::ostream&, const Tree<val_type, comp_type>&);
 
+	~Tree()
+	{
+		destroy_tree(root);
+	}
+
 private:
 	comp_type pred;
 	Node* root = nullptr;
@@ -72,6 +77,14 @@ private:
 	void preorder_print(con& arr, Node* rt) const;
 
 	void print(std::ostream&, const Node*, int = 0) const;
+
+	void destroy_tree(Node* rt) {
+		if (rt != nullptr) {
+			destroy_tree(rt->left);
+			destroy_tree(rt->right);
+			delete rt;
+		}
+	}
 };
 
 template <typename val_type, typename comp_type>
