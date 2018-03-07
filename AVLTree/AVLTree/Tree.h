@@ -91,11 +91,7 @@ public:
 			} else
 			{
 				//key==val
-				Node* max = find_max_in_left_subtree(root->left);
-				max->left = root->left;
-				max->right = root->right;
-				delete root;
-				return balance(max);
+				
 			}
 		}
 		return balance(root);
@@ -103,14 +99,7 @@ public:
 
 	Node* find_max_in_left_subtree(Node* root)
 	{
-		if (root->right->right == nullptr)
-		{
-			Node* max = root->right;
-			root->right = max->left;
-			max->left = nullptr;
-			return max;
-		}
-		return find_max_in_left_subtree(root->right);
+		
 	}
 
 

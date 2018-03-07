@@ -27,6 +27,7 @@ int main()
 	}
 	tr.push(4);
 
-	tr.erase(8);
+	tr.erase(1);
+
 	Print(tr.root, 0);
 }
