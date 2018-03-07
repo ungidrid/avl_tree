@@ -358,7 +358,7 @@ void Tree<val_type, comp_type>::print(std::ostream& os, const Node* rt, int spac
 	while(rt != nullptr)
 	{
 		print(os, rt->right, space + 5);
-		for(unsigned i = 0; i < space; ++i)
+		for(int i = 0; i < space; ++i)
 		{
 			os << " ";
 		}
