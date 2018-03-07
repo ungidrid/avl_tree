@@ -7,7 +7,6 @@
 using std::cout;
 
 
-
 template <typename val_type, typename comp_type=std::less<val_type>>
 class Tree
 {
@@ -30,17 +29,17 @@ private:
 
 public:
 	Tree() = default;
-	Tree& insert(const val_type&);
-	Tree& remove(const val_type&);
-	Node* find(const val_type& val) const;
+	Tree& insert(const val_type&);//Insert new node into tree
+	Tree& remove(const val_type&);//Remove node from tree
+	Node* find(const val_type& val) const;//find node in tree
 
-	template<typename con = std::vector<val_type>>
+	template <typename con = std::vector<val_type>>
 	con inorder_print() const;
 
-	template<typename con = std::vector<val_type>>
+	template <typename con = std::vector<val_type>>
 	con preorder_print() const;
 
-	template<typename con = std::vector<val_type>>
+	template <typename con = std::vector<val_type>>
 	con postorder_print() const;
 
 	template <typename val_type, typename comp_type = std::less<val_type>>
@@ -55,8 +54,8 @@ private:
 	comp_type pred;
 	Node* root = nullptr;
 
-	size_t height(Node*) const;
-	void reset_height(Node*);
+	size_t height(Node*) const;//Returns height of tree with root in node. 0 if nullptr
+	void reset_height(Node*);//Resets height of node based on height of child nodes
 	int balance_factor(Node*);
 	Node* rotate_left(Node*);
 	Node* rotate_right(Node*);
@@ -67,24 +66,17 @@ private:
 	Node* remove_max(Node*);
 	Node* find(Node*, const val_type&) const;
 
-	template<typename con>
-	void inorder_print(con& arr, Node* rt) const;
+	template <typename con>
+	void inorder_print(con&, Node*) const;
 
-	template<typename con>
-	void postorder_print(con& arr, Node* rt) const;
+	template <typename con>
+	void postorder_print(con&, Node*) const;
 
-	template<typename con>
-	void preorder_print(con& arr, Node* rt) const;
+	template <typename con>
+	void preorder_print(con&, Node*) const;
 
 	void print(std::ostream&, const Node*, int = 0) const;
-
-	void destroy_tree(Node* rt) {
-		if (rt != nullptr) {
-			destroy_tree(rt->left);
-			destroy_tree(rt->right);
-			delete rt;
-		}
-	}
+	void destroy_tree(Node*);
 };
 
 template <typename val_type, typename comp_type>
@@ -162,6 +154,16 @@ int Tree<val_type, comp_type>::balance_factor(Node* rt)
 template <typename val_type, typename comp_type>
 typename Tree<val_type, comp_type>::Node* Tree<val_type, comp_type>::rotate_left(Node* rt)
 {
+	/*
+	 *	   1			         4
+	 *	  / \                   / \
+	 *	 2   4       --->      1   5
+	 *	    / \			      / \   \
+	 *	   3   5             2   3   6
+	 *	        \ 
+	 *	         6
+	 */
+
 	Node* new_rt = rt->right;
 	rt->right = new_rt->left;
 	new_rt->left = rt;
@@ -173,6 +175,16 @@ typename Tree<val_type, comp_type>::Node* Tree<val_type, comp_type>::rotate_left
 template <typename val_type, typename comp_type>
 typename Tree<val_type, comp_type>::Node* Tree<val_type, comp_type>::rotate_right(Node* rt)
 {
+	/*
+	*	     4			          2
+	*	    / \                  / \           
+	*	   2   5    --->        1   4
+	*	  / \ 			       /   / \
+	*    1   3                0   3   5
+	*	/       
+	*  0         
+	*/
+
 	Node* new_rt = rt->left;
 	rt->left = new_rt->right;
 	new_rt->right = rt;
@@ -248,8 +260,19 @@ typename Tree<val_type, comp_type>::Node* Tree<val_type, comp_type>::remove(Node
 			{
 				return rt->right;
 			}
-			Node* max = find_max(rt->left);
-			max->left = remove_max(rt->left);
+			/*  
+			 *   remove 6;          max in left subtree is 3
+			 *                      6                       3
+			 *                    /   \                   /   \
+			 *                   2     12                2     12
+			 *                  / \   /  \              /|    /  \   
+			 *                 1   3 9    15           1 2   9    15 
+			 *                    /
+			 *                   2                         
+			 */
+
+			Node* max = find_max(rt->left);  //Find max element in left subtree 
+			max->left = remove_max(rt->left); //Remove max element from left subtree, but save it's left child if exists
 			max->right = rt->right;
 			delete rt;
 			return balance(max);
@@ -342,6 +365,17 @@ void Tree<val_type, comp_type>::print(std::ostream& os, const Node* rt, int spac
 		os << rt->key << "\n";
 		rt = rt->left;
 		space += 5;
+	}
+}
+
+template <typename val_type, typename comp_type>
+void Tree<val_type, comp_type>::destroy_tree(Node* rt)
+{
+	if(rt != nullptr)
+	{
+		destroy_tree(rt->left);
+		destroy_tree(rt->right);
+		delete rt;
 	}
 }
 
