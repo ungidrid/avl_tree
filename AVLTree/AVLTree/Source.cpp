@@ -9,16 +9,11 @@ int main()
 	Tree<int> tr;
 	for(size_t i=1; i<=10; ++i)
 	{
-		tr.push(i);
+		tr.insert(i);
 	}
-	tr.push(4);
-	tr.push(2);
+	tr.insert(4);
+	tr.insert(2);
 	
-	cout << tr << endl;
-
-	cout << endl;
-	cout << endl;
-
-	tr.erase(4);
-	cout << tr << endl;
+	tr.remove(3);
+	cout << tr.find(4)->key << endl;
 }

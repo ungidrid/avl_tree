@@ -3,21 +3,17 @@
 #include <functional>
 #include <algorithm>
 
-#define DEBUG
-
 
 template <typename val_type, typename comp_type=std::less<val_type>>
 class Tree
 {
-#ifndef DEBUG
 private:
-#else
-public:
-#endif
-
-	struct Node
+	class Node
 	{
-		val_type key;
+	public:
+		const val_type key;
+		friend class Tree<val_type, comp_type>;
+	private:
 		size_t height = 1;
 		Node* left = nullptr;
 		Node* right = nullptr;
@@ -30,31 +26,33 @@ public:
 
 public:
 	Tree() = default;
-	Tree& push(const val_type& val);
-	Tree& erase(const val_type& val);
+	Tree& insert(const val_type&);
+	Tree& remove(const val_type&);
+	Node* find(const val_type& val)const
+	{
+		return find(root, val);
+	}
 
 	template <typename val_type, typename comp_type = std::less<val_type>>
-	friend std::ostream& operator<<(std::ostream& os, const Tree<val_type, comp_type>& tr);
+	friend std::ostream& operator<<(std::ostream&, const Tree<val_type, comp_type>&);
 
-#ifndef DEBUG
 private:
-#else
-public:
-#endif
 	comp_type pred;
 	Node* root = nullptr;
 
-	size_t height(Node* p) const;
-	void reset_height(Node* p);
-	int balance_factor(Node* p);
-	Node* rotate_left(Node* root);
-	Node* rotate_right(Node* root);
-	Node* balance(Node* root);
-	Node* insert(Node* root, const val_type& val);
-	Node* remove(Node* root, const val_type& val);
-	Node* find_max(Node* root);
-	Node* remove_max(Node* root);
-	void print(std::ostream& os, const Node* root, int space = 0) const;
+	size_t height(Node*) const;
+	void reset_height(Node*);
+	int balance_factor(Node*);
+	Node* rotate_left(Node*);
+	Node* rotate_right(Node*);
+	Node* balance(Node*);
+	Node* insert(Node*, const val_type&);
+	Node* remove(Node*, const val_type&);
+	Node* find_max(Node*);
+	Node* remove_max(Node*);
+	Node* find(Node*, const val_type&) const;
+
+	void print(std::ostream&, const Node*, int = 0) const;
 };
 
 template <typename val_type, typename comp_type>
@@ -65,165 +63,183 @@ std::ostream& operator<<(std::ostream& os, const Tree<val_type, comp_type>& tr)
 }
 
 template <typename val_type, typename comp_type>
-Tree<val_type, comp_type>& Tree<val_type, comp_type>::push(const val_type& val)
+Tree<val_type, comp_type>& Tree<val_type, comp_type>::insert(const val_type& val)
 {
 	root = insert(root, val);
 	return *this;
 }
 
 template <typename val_type, typename comp_type>
-Tree<val_type, comp_type>& Tree<val_type, comp_type>::erase(const val_type& val)
+Tree<val_type, comp_type>& Tree<val_type, comp_type>::remove(const val_type& val)
 {
 	root = remove(root, val);
 	return *this;
 }
 
 template <typename val_type, typename comp_type>
-size_t Tree<val_type, comp_type>::height(Node* p) const
+size_t Tree<val_type, comp_type>::height(Node* rt) const
 {
-	return p != nullptr ? p->height : 0;
+	return rt != nullptr ? rt->height : 0;
 }
 
 template <typename val_type, typename comp_type>
-void Tree<val_type, comp_type>::reset_height(Node* p)
+void Tree<val_type, comp_type>::reset_height(Node* rt)
 {
-	p->height = std::max(height(p->left), height(p->right)) + 1;
+	rt->height = std::max(height(rt->left), height(rt->right)) + 1;
 }
 
 template <typename val_type, typename comp_type>
-int Tree<val_type, comp_type>::balance_factor(Node* p)
+int Tree<val_type, comp_type>::balance_factor(Node* rt)
 {
-	return height(p->right) - height(p->left);
+	return height(rt->right) - height(rt->left);
 }
 
 template <typename val_type, typename comp_type>
-typename Tree<val_type, comp_type>::Node* Tree<val_type, comp_type>::rotate_left(Node* root)
+typename Tree<val_type, comp_type>::Node* Tree<val_type, comp_type>::rotate_left(Node* rt)
 {
-	Node* new_root = root->right;
-	root->right = new_root->left;
-	new_root->left = root;
-	reset_height(root);
-	reset_height(new_root);
-	return new_root;
+	Node* new_rt = rt->right;
+	rt->right = new_rt->left;
+	new_rt->left = rt;
+	reset_height(rt);
+	reset_height(new_rt);
+	return new_rt;
 }
 
 template <typename val_type, typename comp_type>
-typename Tree<val_type, comp_type>::Node* Tree<val_type, comp_type>::rotate_right(Node* root)
+typename Tree<val_type, comp_type>::Node* Tree<val_type, comp_type>::rotate_right(Node* rt)
 {
-	Node* new_root = root->left;
-	root->left = new_root->right;
-	new_root->right = root;
-	reset_height(root);
-	reset_height(new_root);
-	return new_root;
+	Node* new_rt = rt->left;
+	rt->left = new_rt->right;
+	new_rt->right = rt;
+	reset_height(rt);
+	reset_height(new_rt);
+	return new_rt;
 }
 
 template <typename val_type, typename comp_type>
-typename Tree<val_type, comp_type>::Node* Tree<val_type, comp_type>::balance(Node* root)
+typename Tree<val_type, comp_type>::Node* Tree<val_type, comp_type>::balance(Node* rt)
 {
-	reset_height(root);
-	if(balance_factor(root) == 2)
+	reset_height(rt);
+	if(balance_factor(rt) == 2)
 	{
-		if(balance_factor(root->right) < 0)
+		if(balance_factor(rt->right) < 0)
 		{
-			root->right = rotate_right(root->right);
+			rt->right = rotate_right(rt->right);
 		}
-		return rotate_left(root);
+		return rotate_left(rt);
 	}
-	if(balance_factor(root) == -2)
+	if(balance_factor(rt) == -2)
 	{
-		if(balance_factor(root->left) > 0)
+		if(balance_factor(rt->left) > 0)
 		{
-			root->left = rotate_left(root->left);
+			rt->left = rotate_left(rt->left);
 		}
-		return rotate_right(root);
+		return rotate_right(rt);
 	}
-	return root;
+	return rt;
 }
 
 template <typename val_type, typename comp_type>
-typename Tree<val_type, comp_type>::Node* Tree<val_type, comp_type>::insert(Node* root, const val_type& val)
+typename Tree<val_type, comp_type>::Node* Tree<val_type, comp_type>::insert(Node* rt, const val_type& val)
 {
-	if(root == nullptr)
+	if(rt == nullptr)
 	{
 		return new Node(val);
 	}
-	if(pred(val, root->key))
+	if(pred(val, rt->key))
 	{
-		root->left = insert(root->left, val);
+		rt->left = insert(rt->left, val);
 	}
 	else
 	{
-		root->right = insert(root->right, val);
+		rt->right = insert(rt->right, val);
 	}
-	return balance(root);
+	return balance(rt);
 }
 
 template <typename val_type, typename comp_type>
-typename Tree<val_type, comp_type>::Node* Tree<val_type, comp_type>::remove(Node* root, const val_type& val)
+typename Tree<val_type, comp_type>::Node* Tree<val_type, comp_type>::remove(Node* rt, const val_type& val)
 {
-	if(root == nullptr)
+	if(rt == nullptr)
 	{
 		return nullptr;
 	}
-	if(pred(val, root->key))
+	if(pred(val, rt->key))
 	{
 		//goto left subtree
-		root->left = remove(root->left, val);
+		rt->left = remove(rt->left, val);
 	}
 	else
 	{
-		if(pred(root->key, val))
+		if(pred(rt->key, val))
 		{
 			//goto right subtree
-			root->right = remove(root->right, val);
+			rt->right = remove(rt->right, val);
 		}
 		else
 		{
 			//key==val
-			if(root->left == nullptr)
+			if(rt->left == nullptr)
 			{
-				return root->right;
+				return rt->right;
 			}
-			Node* max = find_max(root->left);
-			max->left = remove_max(root->left);
-			max->right = root->right;
-			delete root;
+			Node* max = find_max(rt->left);
+			max->left = remove_max(rt->left);
+			max->right = rt->right;
+			delete rt;
 			return balance(max);
 		}
 	}
-	return balance(root);
+	return balance(rt);
 }
 
 template <typename val_type, typename comp_type>
-typename Tree<val_type, comp_type>::Node* Tree<val_type, comp_type>::find_max(Node* root)
+typename Tree<val_type, comp_type>::Node* Tree<val_type, comp_type>::find_max(Node* rt)
 {
-	return root->right == nullptr ? root : find_max(root->right);
+	return rt->right == nullptr ? rt : find_max(rt->right);
 }
 
 template <typename val_type, typename comp_type>
-typename Tree<val_type, comp_type>::Node* Tree<val_type, comp_type>::remove_max(Node* root)
+typename Tree<val_type, comp_type>::Node* Tree<val_type, comp_type>::remove_max(Node* rt)
 {
-	if(root->right == nullptr)
+	if(rt->right == nullptr)
 	{
-		return root->left;
+		return rt->left;
 	}
-	root->right = remove_max(root->right);
-	return balance(root);
+	rt->right = remove_max(rt->right);
+	return balance(rt);
 }
 
 template <typename val_type, typename comp_type>
-void Tree<val_type, comp_type>::print(std::ostream& os, const Node* root, int space) const
+typename Tree<val_type, comp_type>::Node* Tree<val_type, comp_type>::find(Node* rt, const val_type& val) const
 {
-	while(root != nullptr)
+	if(rt != nullptr)
 	{
-		print(os, root->right, space + 5);
-		for(int i = 0; i < space; ++i)
+		if(pred(val, rt->key))
+		{
+			return find(rt->left, val);
+		}
+		if(pred(rt->key, val))
+		{
+			return find(rt->right, val);
+		}
+		return rt;
+	}
+	return nullptr;
+}
+
+template <typename val_type, typename comp_type>
+void Tree<val_type, comp_type>::print(std::ostream& os, const Node* rt, int space) const
+{
+	while(rt != nullptr)
+	{
+		print(os, rt->right, space + 5);
+		for(unsigned i = 0; i < space; ++i)
 		{
 			os << " ";
 		}
-		os << root->key << "\n";
-		root = root->left;
+		os << rt->key << "\n";
+		rt = rt->left;
 		space += 5;
 	}
 }
