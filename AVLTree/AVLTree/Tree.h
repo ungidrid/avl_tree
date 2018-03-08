@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <vector>
 
-
+//https://www.cs.usfca.edu/~galles/visualization/AVLtree.html
 
 template <typename val_type, typename comp_type=std::less<val_type>>
 class Tree
