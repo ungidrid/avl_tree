@@ -30,7 +30,7 @@ public:
 	Tree() = default;
 	Tree& insert(const val_type&);//Insert new node into tree
 	Tree& remove(const val_type&);//Remove node from tree
-	Node* find(const val_type& val) const;//find node in tree
+	bool contain(const val_type& val) const;//find node in tree
 
 	template <typename con = std::vector<val_type>>
 	con inorder_print() const;
@@ -48,7 +48,27 @@ public:
 	{
 		destroy_tree(root);
 	}
-
+#define DEBUGMODE
+#ifdef DEBUGMODE
+	bool is_balanced()
+	{
+		return is_bal(root);
+	}
+	bool is_bal(Node* n)
+	{
+		bool res = true;
+		res = balance_factor(n) <= 1 && balance_factor(n) >= -1;
+		if(n->left!=nullptr)
+		{
+			res = res && is_bal(n->left);
+		}
+		if(n->right!=nullptr)
+		{
+			res = res && is_bal(n->right);
+		}
+		return res;
+	}
+#endif
 private:
 	comp_type pred;
 	Node* root = nullptr;
@@ -79,9 +99,9 @@ private:
 };
 
 template <typename val_type, typename comp_type>
-typename Tree<val_type, comp_type>::Node* Tree<val_type, comp_type>::find(const val_type& val) const
+bool Tree<val_type, comp_type>::contain(const val_type& val) const
 {
-	return find(root, val);
+	return find(root, val)!=nullptr;
 }
 
 template <typename val_type, typename comp_type>
