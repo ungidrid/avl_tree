@@ -48,27 +48,7 @@ public:
 	{
 		destroy_tree(root);
 	}
-#define DEBUGMODE
-#ifdef DEBUGMODE
-	bool is_balanced()
-	{
-		return is_bal(root);
-	}
-	bool is_bal(Node* n)
-	{
-		bool res = true;
-		res = balance_factor(n) <= 1 && balance_factor(n) >= -1;
-		if(n->left!=nullptr)
-		{
-			res = res && is_bal(n->left);
-		}
-		if(n->right!=nullptr)
-		{
-			res = res && is_bal(n->right);
-		}
-		return res;
-	}
-#endif
+
 private:
 	comp_type pred;
 	Node* root = nullptr;
